@@ -14,10 +14,11 @@ class UserController {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$name = $data['name'] ?? null;
 		$email = $data['email'] ?? null;
+		$password = $data['password'] ?? null;
 
-		if ($name && $email) {
-			$result = $this->userModel->create($name, $email);
-			echo json_encode(["success" => $result, "message" => $result ? "Usuário criado com sucesso." : "Falha ao criar usuário."]);
+		if ($name && $email && $password) {
+			$result = $this->userModel->create($name, $email, $password);
+			echo json_encode(["success" => $result]);
 		} else {
 			http_response_code(400);
 			echo json_encode(["error" => "Nome e email são obrigatórios."]);
@@ -33,9 +34,10 @@ class UserController {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$name = $data['name'] ?? null;
 		$email = $data['email'] ?? null;
+		$password = $data['password'] ?? null;
 
 		if ($name && $email) {
-			$result = $this->userModel->update($id, $name, $email);
+			$result = $this->userModel->update($id, $name, $email, $password);
 			echo json_encode(["success" => $result, "message" => $result ? "Usuário atualizado com sucesso." : "Falha ao atualizar usuário."]);
 		} else {
 			http_response_code(400);

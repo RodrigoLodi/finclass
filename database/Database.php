@@ -21,16 +21,13 @@ class DataBase {
     }
 
     private function initializeDatabase() {
-        // Primeiro tenta criar o banco de dados, pois ele pode não existir
         $createDbQuery = "CREATE DATABASE IF NOT EXISTS " . $this->database;
         if ($this->connection->query($createDbQuery) === FALSE) {
             die("Error creating database: " . $this->connection->error);
         }
 
-        // Seleciona o banco de dados após garantir que ele existe
         $this->connection->select_db($this->database);
 
-        // Cria as tabelas se não existirem
         $this->createTables();
     }
 
