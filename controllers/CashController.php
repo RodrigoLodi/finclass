@@ -1,6 +1,8 @@
 <?php
 
-require_once("../models/Cash.php");
+namespace App\Controllers;
+
+use App\Models\Cash;
 
 class CashController {
 	private $cashModel;

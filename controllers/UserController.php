@@ -1,7 +1,8 @@
 <?php
 
-require_once("../database/Database.php");
-require_once("../models/User.php");
+namespace App\Controllers;
+
+use App\Models\User;
 
 class UserController {
 	private $userModel;
@@ -49,4 +50,8 @@ class UserController {
 		$result = $this->userModel->delete($id);
 		echo json_encode(["success" => $result, "message" => $result ? "Usuário deletado com sucesso." : "Falha ao deletar usuário."]);
 	}
+
+	public function index() {
+        echo json_encode(['message' => 'User endpoint accessed successfully']);
+    }
 }

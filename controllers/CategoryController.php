@@ -1,6 +1,8 @@
 <?php
 
-require_once("../models/Category.php");
+namespace App\Controllers;
+
+use App\Models\Category;
 
 class CategoryController {
 	private $categoryModel;

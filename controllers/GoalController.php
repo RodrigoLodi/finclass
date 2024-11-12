@@ -1,7 +1,8 @@
 <?php
 
-require_once("../models/Goal.php");
+namespace App\Controllers;
 
+use App\Models\Goal;
 class GoalController {
 	private $goalModel;
 

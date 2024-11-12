@@ -1,12 +1,14 @@
 <?php
 
-require_once("../database/Database.php");
+namespace App\Models;
+
+use App\Database\Database;
 
 class Category {
 	private $db;
 
 	public function __construct() {
-		$this->db = (new DataBase())->getConnection();
+		$this->db = (new Database())->getConnection();
 	}
 
 	public function create($name, $description) {

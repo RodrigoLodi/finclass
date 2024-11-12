@@ -30,3 +30,6 @@ Este sistema é destinado a pessoas que buscam uma forma prática de entender e 
 - `/routes`
 - `/vendor`
 - `/database`
+
+## Comando para iniciar o PHP no Windows
+- `php -S localhost:8000 -t public`

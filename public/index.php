@@ -1,12 +1,10 @@
 <?php
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
-require_once '../routes/web.php';
-require_once '../controllers/HomeController.php';
-require_once '../controllers/UserController.php';
-require_once '../controllers/CategoryController.php';
-require_once '../controllers/GoalController.php';
-require_once '../controllers/CashController.php';
-require_once '../core/Router.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-$router = new Router($routes, '/finplanner');
-$router->handleRequest();
+use App\Core\Router;
+
+$routes = require __DIR__ . '/../routes/Web.php';
