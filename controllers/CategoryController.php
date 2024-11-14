@@ -11,6 +11,17 @@ class CategoryController {
 		$this->categoryModel = new Category();
 	}
 
+	public function index()
+    {
+        $viewPath = __DIR__ . '/../views/category/index.php';
+
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "View não encontrada: category/index.php";
+        }
+    }
+
 	public function create() {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$name = $data['name'] ?? null;
@@ -26,7 +37,11 @@ class CategoryController {
 	}
 
 	public function read($id = null) {
-		$data = $this->categoryModel->read($id);
+		if ($id === "all") {
+            $data = $this->categoryModel->read();
+        } else {
+            $data = $this->categoryModel->read($id);
+        }
 		echo json_encode($data);
 	}
 

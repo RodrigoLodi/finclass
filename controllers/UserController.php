@@ -11,6 +11,17 @@ class UserController {
 		$this->userModel = new User();
 	}
 
+	public function index()
+    {
+        $viewPath = __DIR__ . '/../views/user/index.php';
+
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "View não encontrada: user/index.php";
+        }
+    }
+
 	public function create() {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$name = $data['name'] ?? null;
@@ -27,7 +38,11 @@ class UserController {
 	}
 
 	public function read($id = null) {
-		$data = $this->userModel->read($id);
+		if ($id === "all") {
+            $data = $this->userModel->read();
+        } else {
+            $data = $this->userModel->read($id);
+        }
 		echo json_encode($data);
 	}
 
@@ -50,8 +65,4 @@ class UserController {
 		$result = $this->userModel->delete($id);
 		echo json_encode(["success" => $result, "message" => $result ? "Usuário deletado com sucesso." : "Falha ao deletar usuário."]);
 	}
-
-	public function index() {
-        echo json_encode(['message' => 'User endpoint accessed successfully']);
-    }
 }

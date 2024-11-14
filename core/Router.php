@@ -30,20 +30,23 @@ class Router
     
         if (isset($this->routes[$requestMethod])) {
             foreach ($this->routes[$requestMethod] as $route => $controllerAction) {
-                $routePattern = preg_replace('/\{[a-zA-Z]+\}/', '([a-zA-Z0-9-_]+)', $route);
+                $routePattern = preg_replace('/\{[a-zA-Z]+\}/', '([a-zA-Z0-9-_]*)', $route);
                 $routePattern = str_replace('/', '\/', $routePattern);
-    
+            
                 if (preg_match('/^' . $routePattern . '$/', $requestUri, $matches)) {
                     $foundRoute = true;
                     array_shift($matches);
-    
+            
+                    $matches = !empty($matches[0]) ? $matches : [null];
+            
                     $routeParts = explode('@', $controllerAction);
                     $controllerName = "App\\Controllers\\" . $routeParts[0];
                     $methodName = $routeParts[1];
-
+            
                     if (class_exists($controllerName) && method_exists($controllerName, $methodName)) {
                         $controller = new $controllerName();
                         call_user_func_array([$controller, $methodName], $matches);
+                        
                         return;
                     } else {
                         if ($isApiRequest) {
@@ -54,7 +57,7 @@ class Router
                         return;
                     }
                 }
-            }
+            }            
         }
     
         if (!$foundRoute) {

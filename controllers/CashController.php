@@ -11,6 +11,17 @@ class CashController {
 		$this->cashModel = new Cash();
 	}
 
+	public function index()
+    {
+        $viewPath = __DIR__ . '/../views/cash/index.php';
+
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "View não encontrada: cash/index.php";
+        }
+    }
+
 	public function create() {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$user_id = $data['user_id'] ?? null;
@@ -30,9 +41,14 @@ class CashController {
 	}
 
 	public function read($id = null) {
-		$data = $this->cashModel->read($id);
-		echo json_encode($data);
-	}
+        if ($id === "all") {
+            $data = $this->cashModel->read();
+        } else {
+            $data = $this->cashModel->read($id);
+        }
+
+        echo json_encode($data);
+    }
 
 	public function update($id) {
 		$data = json_decode(file_get_contents("php://input"), true);

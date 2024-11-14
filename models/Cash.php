@@ -34,7 +34,7 @@ class Cash {
                 return ["success" => true, "data" => $result->fetch_all(MYSQLI_ASSOC)];
             }
         } catch (\mysqli_sql_exception $e) {
-            return ["success" => false, "message" => "Erro ao ler transação: " . $e->getMessage()];
+            return ["success" => false, "message" => "Erro ao ler registros: " . $e->getMessage()];
         }
     }
 
