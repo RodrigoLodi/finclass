@@ -23,18 +23,30 @@ class CategoryController {
     }
 
 	public function create() {
-		$data = json_decode(file_get_contents("php://input"), true);
+		$data = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 		$name = $data['name'] ?? null;
 		$description = $data['description'] ?? null;
-
+	
 		if ($name) {
 			$result = $this->categoryModel->create($name, $description);
-			echo json_encode(["success" => $result, "message" => $result ? "Categoria criada com sucesso." : "Falha ao criar categoria."]);
+	
+			if (isset($result['success']) && $result['success']) {
+				echo json_encode([
+					"success" => true,
+					"message" => $result['message'],
+					"data" => $result['data']
+				]);
+			} else {
+				echo json_encode([
+					"success" => false,
+					"message" => $result['message'] ?? "Falha ao criar categoria."
+				]);
+			}
 		} else {
 			http_response_code(400);
-			echo json_encode(["error" => "O campo nome é obrigatório."]);
+			echo json_encode(["success" => false, "message" => "O campo nome é obrigatório."]);
 		}
-	}
+	}	
 
 	public function read($id = null) {
 		if ($id === "all") {
@@ -46,21 +58,28 @@ class CategoryController {
 	}
 
 	public function update($id) {
-		$data = json_decode(file_get_contents("php://input"), true);
+		$data = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 		$name = $data['name'] ?? null;
 		$description = $data['description'] ?? null;
-
+	
 		if ($name) {
 			$result = $this->categoryModel->update($id, $name, $description);
-			echo json_encode(["success" => $result, "message" => $result ? "Categoria atualizada com sucesso." : "Falha ao atualizar categoria."]);
+			echo json_encode([
+				"success" => $result['success'],
+				"message" => $result['message']
+			]);
 		} else {
 			http_response_code(400);
-			echo json_encode(["error" => "O campo nome é obrigatório."]);
+			echo json_encode(["success" => false, "message" => "O campo nome é obrigatório."]);
 		}
-	}
+	}	
 
 	public function delete($id) {
 		$result = $this->categoryModel->delete($id);
-		echo json_encode(["success" => $result, "message" => $result ? "Categoria deletada com sucesso." : "Falha ao deletar categoria."]);
-	}
+	
+		echo json_encode([
+			"success" => $result['success'],
+			"message" => $result['message']
+		]);
+	}	
 }

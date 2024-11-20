@@ -23,20 +23,35 @@ class CashController {
     }
 
 	public function create() {
-		$data = json_decode(file_get_contents("php://input"), true);
+		$data = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 		$user_id = $data['user_id'] ?? null;
 		$category_id = $data['category_id'] ?? null;
 		$type = $data['type'] ?? null;
 		$amount = $data['amount'] ?? null;
 		$date = $data['date'] ?? null;
 		$description = $data['description'] ?? null;
-
+	
 		if ($user_id && $category_id && $type && $amount && $date) {
 			$result = $this->cashModel->create($user_id, $category_id, $type, $amount, $date, $description);
-			echo json_encode(["success" => $result, "message" => $result ? "Transação criada com sucesso." : "Falha ao criar transação."]);
+	
+			if (isset($result['success']) && $result['success']) {
+				echo json_encode([
+					"success" => true,
+					"message" => "Transação criada com sucesso.",
+					"data" => $result['data']
+				]);
+			} else {
+				echo json_encode([
+					"success" => false,
+					"message" => $result['message'] ?? "Falha ao criar transação."
+				]);
+			}
 		} else {
 			http_response_code(400);
-			echo json_encode(["error" => "Campos obrigatórios: user_id, category_id, type, amount e date."]);
+			echo json_encode([
+				"success" => false,
+				"error" => "Campos obrigatórios: user_id, category_id, type, amount e date."
+			]);
 		}
 	}
 
@@ -51,25 +66,39 @@ class CashController {
     }
 
 	public function update($id) {
-		$data = json_decode(file_get_contents("php://input"), true);
+		header('Content-Type: application/json');
+		$data = json_decode(file_get_contents("php://input"), true) ?? $_POST;
+	
+		if (!$data) {
+			echo json_encode(["success" => false, "message" => "Nenhum dado recebido."]);
+			return;
+		}
+	
 		$user_id = $data['user_id'] ?? null;
 		$category_id = $data['category_id'] ?? null;
 		$type = $data['type'] ?? null;
 		$amount = $data['amount'] ?? null;
 		$date = $data['date'] ?? null;
 		$description = $data['description'] ?? null;
-
+	
 		if ($user_id && $category_id && $type && $amount && $date) {
 			$result = $this->cashModel->update($id, $user_id, $category_id, $type, $amount, $date, $description);
-			echo json_encode(["success" => $result, "message" => $result ? "Transação atualizada com sucesso." : "Falha ao atualizar transação."]);
+	
+			echo json_encode([
+				"success" => $result['success'],
+				"message" => $result['message']
+			]);
 		} else {
 			http_response_code(400);
-			echo json_encode(["error" => "Todos os campos são obrigatórios."]);
+			echo json_encode(["success" => false, "message" => "Todos os campos são obrigatórios."]);
 		}
 	}
-
+	
 	public function delete($id) {
 		$result = $this->cashModel->delete($id);
-		echo json_encode(["success" => $result, "message" => $result ? "Transação deletada com sucesso." : "Falha ao deletar transação."]);
-	}
+		echo json_encode([
+			"success" => $result['success'],
+			"message" => $result['message']
+		]);
+	}	
 }

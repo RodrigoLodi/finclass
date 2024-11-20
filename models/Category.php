@@ -16,11 +16,16 @@ class Category {
 			$stmt = $this->db->prepare("INSERT INTO category (name, description) VALUES (?, ?)");
 			$stmt->bind_param("ss", $name, $description);
 			$stmt->execute();
-			return ["success" => true, "message" => "Categoria criada com sucesso."];
+	
+			return [
+				"success" => true,
+				"data" => ["id" => $this->db->insert_id],
+				"message" => "Categoria criada com sucesso."
+			];
 		} catch (\mysqli_sql_exception $e) {
 			return ["success" => false, "message" => "Erro ao criar categoria: " . $e->getMessage()];
 		}
-	}
+	}	
 
 	public function read($id = null) {
 		try {
@@ -58,15 +63,16 @@ class Category {
 			if (!$this->exists($id)) {
 				return ["success" => false, "message" => "Erro: categoria não encontrada."];
 			}
-
+	
 			$stmt = $this->db->prepare("DELETE FROM category WHERE id = ?");
 			$stmt->bind_param("i", $id);
 			$stmt->execute();
+	
 			return ["success" => true, "message" => "Categoria deletada com sucesso."];
 		} catch (\mysqli_sql_exception $e) {
 			return ["success" => false, "message" => "Erro ao deletar categoria: " . $e->getMessage()];
 		}
-	}
+	}	
 
 	private function exists($id) {
 		try {
