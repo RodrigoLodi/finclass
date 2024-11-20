@@ -33,3 +33,6 @@ Este sistema é destinado a pessoas que buscam uma forma prática de entender e 
 
 ## Comando para iniciar o PHP no Windows
 - `php -S localhost:8000 -t public`
+
+## Comando para testar phpunit
+- `vendor/bin/phpunit`
